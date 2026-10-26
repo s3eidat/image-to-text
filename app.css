@@ -1,0 +1,28 @@
+.ocr-opts { align-items: end; }
+.ocr-opts div.field { display: grid; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.ocr-opts label.field { min-width: 210px; }
+.ocr-note { font-size: 12.5px; }
+.ocr-progress { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; }
+.ocr-progress progress { grid-column: 1 / -1; width: 100%; height: 8px; appearance: none; -webkit-appearance: none; border: 0; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.ocr-progress progress::-webkit-progress-bar { background: var(--surface-3); border-radius: 99px; }
+.ocr-progress progress::-webkit-progress-value { background: var(--accent); border-radius: 99px; transition: width 200ms; }
+.ocr-progress progress::-moz-progress-bar { background: var(--accent); border-radius: 99px; }
+.ocr-progress span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#text { min-height: 300px; font-size: 15.5px; line-height: 1.7; }
+#text[dir="rtl"] { font-size: 17px; }
+.ocr-pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.ocr-page { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.ocr-page img { width: 56px; height: 56px; object-fit: cover; object-position: top; border-radius: 8px; background: #fff; }
+.ocr-pmeta { display: grid; gap: 4px; min-width: 0; justify-items: start; }
+.ocr-pmeta b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.ocr-pmeta .chip { font-size: 11.5px; }
+.drop.ocr-compact { padding: 16px 18px; gap: 4px; }
+.drop.ocr-compact svg.i { width: 22px; height: 22px; }
+.ocr-split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 14px; align-items: stretch; }
+.ocr-src { margin: 0; display: grid; grid-template-rows: 1fr auto; gap: 6px; padding: 10px; border-radius: 12px; border: 1px solid var(--line); min-height: 300px; max-height: 520px; }
+.ocr-src img { width: 100%; height: 100%; max-height: 470px; object-fit: contain; min-height: 0; }
+.ocr-src img:not([src]) { visibility: hidden; }
+.ocr-src figcaption { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+.ocr-page { cursor: pointer; }
+.ocr-page.is-on { border-color: var(--accent); }
+@media (max-width: 720px) { .ocr-split { grid-template-columns: 1fr; } .ocr-src { min-height: 0; max-height: 300px; } .ocr-src img { max-height: 250px; } }

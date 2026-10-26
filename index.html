@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Image to Text — Free OCR for Images &amp; Scanned PDFs, English &amp; Arabic | S3eidat Tools</title>
+<meta name="description" content="Extract text from photos, screenshots and scanned PDFs with OCR in your browser. English and Arabic, confidence per page, copy or download .txt. Free, nothing uploaded.">
+<meta property="og:title" content="Image to Text — free, private OCR">
+<meta property="og:description" content="Extract text from images and scanned PDFs, English and Arabic. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/image-to-text/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/image-to-text/">
+<meta property="og:image" content="https://s3eidat.github.io/image-to-text/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image to Text — Extract text from images and scanned PDFs (OCR)">
+<meta name="twitter:description" content="Extract text from images and scanned PDFs (OCR). Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/image-to-text/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Image to Text", "url": "https://s3eidat.github.io/image-to-text/", "description": "Extract text from images and scanned PDFs (OCR). Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/image-to-text/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="image-to-text">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Image to Text</h1>
+    <p>Pull the text out of photos, screenshots and scanned PDFs, in English or Arabic. The OCR engine runs on your device, so your documents are never uploaded.</p>
+  </section>
+
+  <section class="card stack">
+    <div class="row between ocr-opts">
+      <div class="field"><span>Language of the text</span>
+        <div class="seg" id="lang" role="group" aria-label="Language">
+          <button aria-pressed="true" data-v="eng">English</button>
+          <button aria-pressed="false" data-v="ara">العربية</button>
+          <button aria-pressed="false" data-v="eng+ara">Both</button>
+        </div>
+      </div>
+      <label class="field">Scanned PDF resolution
+        <select class="select" id="dpi">
+          <option value="150">150 DPI (fast)</option>
+          <option value="200" selected>200 DPI (recommended)</option>
+          <option value="300">300 DPI (small print)</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="drop" id="drop">
+      <input type="file" hidden>
+      <svg class="i"><use href="#i-image"/></svg>
+      <b>Drop images or a scanned PDF</b>
+      <span>or click to choose, or paste a screenshot with <kbd>Ctrl</kbd>+<kbd>V</kbd></span>
+    </label>
+    <div class="row">
+      <label class="btn ghost small" id="cam"><svg class="i"><use href="#i-image"/></svg>Take a photo<input type="file" accept="image/*" capture="environment" hidden></label>
+      <span class="faint ocr-note">PNG, JPG, WebP, GIF, BMP and PDF. The first run loads the English or Arabic model (3 MB) from this site.</span>
+    </div>
+  </section>
+
+  <section class="card stack mt" id="results" hidden>
+    <div class="row between">
+      <h2>Text <small id="rsum"></small></h2>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="join"> Join lines into paragraphs</label>
+        <button class="btn small" id="copy"><svg class="i"><use href="#i-copy"/></svg>Copy</button>
+        <button class="btn small" id="save"><svg class="i"><use href="#i-download"/></svg>.txt</button>
+        <button class="btn ghost small" id="clear"><svg class="i"><use href="#i-trash"/></svg>Clear</button>
+      </div>
+    </div>
+    <div class="ocr-progress" id="progWrap" hidden>
+      <progress id="prog" max="1" value="0"></progress>
+      <span class="faint" id="progText">Starting…</span>
+      <button class="btn small" id="cancel"><svg class="i"><use href="#i-x"/></svg>Stop</button>
+    </div>
+    <div class="ocr-split">
+      <figure class="ocr-src checker" id="srcBox"><img id="srcImg" alt="The page being read"><figcaption class="faint" id="srcCap"></figcaption></figure>
+      <textarea class="textarea prose" id="text" dir="auto" aria-label="Recognised text" spellcheck="false" placeholder="Recognised text appears here. You can edit it before copying."></textarea>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="ocr-pages" id="pages"></div>
+  </section>
+</main>
+<script src="lib/tesseract.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
