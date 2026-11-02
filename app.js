@@ -40,12 +40,14 @@ function combine(pages, join) {
 
 // ---------- the OCR worker (one, re-made when the language changes) ----------
 let W = null;
+const LIB = new URL("lib/", location.href).href;
 function getWorker(langs) {
   if (W && W.langs === langs) return W.ready;
   dropWorker();
   const rec = { langs };
   rec.ready = Tesseract.createWorker(langs.split("+"), 1, {
-    workerPath: "lib/tesseract.worker.min.js", corePath: "lib/", langPath: "lib",
+    // Absolute URLs: the worker resolves corePath/langPath against its own URL (already in lib/), not the page's.
+    workerPath: LIB + "tesseract.worker.min.js", corePath: LIB, langPath: LIB,
     gzip: true, cacheMethod: "none", workerBlobURL: false,
     logger: m => { if (W === rec && st.onLog) st.onLog(m); },
     errorHandler: e => console.warn("OCR worker:", e)
